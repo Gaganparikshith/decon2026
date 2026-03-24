@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dive Emergencies Conference 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #040d1a;
+    --deep: #061225;
+    --mid: #0a2040;
+    --cyan: #00d4ff;
+    --teal: #00a89d;
+    --glow: rgba(0,212,255,0.15);
+    --muted: #8ab4cc;
+    --light: #d6eaf5;
+    --white: #f0f8ff;
+    --danger: #ff4c6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--light);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS BACKGROUND ── */
+  #ocean-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(4,13,26,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+  }
+
+  .hero-depth {
+    font-size: 0.72rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--cyan);
+  }
+
+  .hero-sub {
+    margin-top: 1.8rem;
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 1s 0.8s forwards;
+  }
+
+  .hero-date-badge {
+    margin-top: 2.5rem;
+    display: inline-flex;
+    gap: 2rem;
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px;
+    padding: 0.7rem 2.2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    background: rgba(0,212,255,0.04);
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+  }
+
+  .btn-primary {
+    background: var(--cyan);
+    color: var(--navy);
+    border: none;
+    padding: 0.85rem 2.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--white);
+    box-shadow: 0 0 30px rgba(0,212,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid rgba(0,212,255,0.4);
+    padding: 0.85rem 2.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    background: rgba(0,212,255,0.08);
+    border-color: var(--cyan);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 1.5s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 7rem 5%;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, var(--cyan), transparent);
+    margin: 1.5rem 0 3rem;
+  }
+
+  /* ── AGENDA ── */
+  #agenda { background: var(--deep); }
+
+  .agenda-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+  }
+
+  .agenda-day {
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .agenda-day-header {
+    background: rgba(0,212,255,0.06);
+    border-bottom: 1px solid rgba(0,212,255,0.1);
+    padding: 1rem 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+  }
+
+  .agenda-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+
+  .agenda-item:hover { background: rgba(0,212,255,0.03); }
+  .agenda-item:last-child { border-bottom: none; }
+
+  .agenda-time {
+    font-size: 0.72rem;
+    color: var(--cyan);
+    white-space: nowrap;
+    padding-top: 0.15rem;
+    letter-spacing: 0.05em;
+    min-width: 70px;
+  }
+
+  .agenda-talk { font-size: 0.88rem; line-height: 1.5; }
+  .agenda-speaker { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 100px;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .tag-red { background: rgba(255,76,106,0.12); color: var(--danger); border: 1px solid rgba(255,76,106,0.2); }
+  .tag-cyan { background: rgba(0,212,255,0.08); color: var(--cyan); border: 1px solid rgba(0,212,255,0.2); }
+  .tag-teal { background: rgba(0,168,157,0.1); color: var(--teal); border: 1px solid rgba(0,168,157,0.25); }
+
+  /* ── SPEAKERS ── */
+  #speakers { background: var(--navy); }
+
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    max-width: 1100px;
+  }
+
+  .speaker-card {
+    border: 1px solid rgba(0,212,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+
+  .speaker-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 20px rgba(0,212,255,0.05);
+  }
+
+  .speaker-avatar {
+    width: 100%;
+    height: 180px;
+    background: var(--mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--cyan);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .speaker-avatar::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(4,13,26,0.8), transparent);
+  }
+
+  .speaker-info { padding: 1.2rem; }
+
+  .speaker-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  .speaker-role { font-size: 0.73rem; color: var(--muted); margin-top: 0.25rem; line-height: 1.4; }
+  .speaker-topic { font-size: 0.75rem; color: var(--cyan); margin-top: 0.6rem; opacity: 0.8; }
+
+  /* ── VENUE ── */
+  #venue { background: var(--deep); }
+
+  .venue-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1100px;
+    align-items: start;
+  }
+
+  .venue-map {
+    height: 340px;
+    background: var(--mid);
+    border-radius: 4px;
+    border: 1px solid rgba(0,212,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .venue-map::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.05), transparent 70%);
+  }
+
+  .venue-map svg { z-index: 1; }
+
+  .info-block { margin-bottom: 2rem; }
+  .info-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.4rem; }
+  .info-value { font-size: 0.95rem; color: var(--light); line-height: 1.6; }
+
+  .travel-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .travel-card {
+    background: rgba(0,212,255,0.03);
+    border: 1px solid rgba(0,212,255,0.1);
+    border-radius: 4px;
+    padding: 1rem;
+  }
+
+  .travel-card-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .travel-card-title { font-size: 0.75rem; font-weight: 500; color: var(--white); margin-bottom: 0.3rem; letter-spacing: 0.05em; }
+  .travel-card-text { font-size: 0.73rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── REGISTER ── */
+  #register { background: var(--navy); }
+
+  .register-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    max-width: 1000px;
+    align-items: start;
+  }
+
+  .register-copy p { font-size: 0.92rem; color: var(--muted); line-height: 1.8; margin-bottom: 1.2rem; }
+
+  .pricing-cards { display: flex; flex-direction: column; gap: 1rem; }
+
+  .pricing-card {
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 4px;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .pricing-card:hover {
+    background: rgba(0,212,255,0.04);
+    border-color: rgba(0,212,255,0.3);
+  }
+
+  .pricing-card.featured {
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.06);
+    box-shadow: 0 0 30px rgba(0,212,255,0.05);
+  }
+
+  .pricing-type { font-size: 0.85rem; font-weight: 500; color: var(--white); }
+  .pricing-includes { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+  .pricing-amount { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--cyan); }
+
+  /* Registration form */
+  .reg-form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+  .form-input, .form-select {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    color: var(--light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .form-input:focus, .form-select:focus {
+    border-color: rgba(0,212,255,0.5);
+    background: rgba(0,212,255,0.04);
+  }
+
+  .form-select option { background: var(--deep); }
+
+  .form-submit {
+    margin-top: 0.5rem;
+    padding: 0.9rem;
+    background: var(--cyan);
+    color: var(--navy);
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .form-submit:hover {
+    background: var(--white);
+    box-shadow: 0 0 30px rgba(0,212,255,0.4);
+    transform: translateY(-1px);
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 4px;
+    background: rgba(0,212,255,0.04);
+  }
+
+  .form-success .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .form-success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .form-success p { font-size: 0.85rem; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--deep);
+    border-top: 1px solid rgba(0,212,255,0.08);
+    padding: 3rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer-copy { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* ── AI CHATBOT ── */
+  #chat-toggle {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    z-index: 200;
+    width: 58px; height: 58px;
+    background: var(--cyan);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 30px rgba(0,212,255,0.5);
+    transition: all 0.3s;
+    font-size: 1.3rem;
+  }
+
+  #chat-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 40px rgba(0,212,255,0.7);
+  }
+
+  #chat-toggle .pulse-ring {
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    animation: pulsate 2s ease-out infinite;
+  }
+
+  #chatbox {
+    position: fixed;
+    bottom: 5.5rem; right: 2rem;
+    z-index: 200;
+    width: 360px;
+    max-height: 520px;
+    background: var(--deep);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,212,255,0.06);
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.92) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+
+  #chatbox.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .chat-header {
+    background: rgba(0,212,255,0.06);
+    border-bottom: 1px solid rgba(0,212,255,0.12);
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .chat-avatar {
+    width: 34px; height: 34px;
+    background: rgba(0,212,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,212,255,0.3);
+  }
+
+  .chat-header-info { flex: 1; }
+  .chat-name { font-size: 0.85rem; font-weight: 500; color: var(--white); }
+  .chat-status { font-size: 0.68rem; color: var(--teal); display: flex; align-items: center; gap: 0.3rem; }
+  .status-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; }
+
+  .chat-close {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
+  }
+  .chat-close:hover { color: var(--white); }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,212,255,0.2) transparent;
+  }
+
+  .chat-bubble {
+    max-width: 85%;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .bubble-bot {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.12);
+    color: var(--light);
+    align-self: flex-start;
+    border-radius: 4px 12px 12px 12px;
+  }
+
+  .bubble-user {
+    background: var(--cyan);
+    color: var(--navy);
+    align-self: flex-end;
+    border-radius: 12px 4px 12px 12px;
+    font-weight: 400;
+  }
+
+  .typing-indicator {
+    display: none;
+    align-self: flex-start;
+    padding: 0.7rem 1rem;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 4px 12px 12px 12px;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .typing-indicator.visible { display: flex; }
+
+  .dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  .quick-chips {
+    padding: 0 1rem 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .chip:hover { background: rgba(0,212,255,0.15); }
+
+  .chat-input-row {
+    border-top: 1px solid rgba(0,212,255,0.1);
+    padding: 0.8rem 1rem;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(0,212,255,0.12);
+    border-radius: 100px;
+    padding: 0.6rem 1rem;
+    color: var(--light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .chat-input:focus { border-color: rgba(0,212,255,0.4); }
+  .chat-input::placeholder { color: rgba(138,180,204,0.4); }
+
+  .chat-send {
+    width: 34px; height: 34px;
+    background: var(--cyan);
+    border: none;
+    border-radius: 50%;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--white); transform: scale(1.08); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  @keyframes pulsate {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 5%; }
+    .agenda-grid { grid-template-columns: 1fr; }
+    .venue-layout { grid-template-columns: 1fr; }
+    .register-layout { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    #chatbox { width: calc(100vw - 2rem); right: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="ocean-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DEC · 2026</div>
+  <ul class="nav-links">
+    <li><a href="#agenda">Schedule</a></li>
+    <li><a href="#speakers">Speakers</a></li>
+    <li><a href="#venue">Venue</a></li>
+    <li><a href="#register">Register</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-depth">International Symposium</div>
+  <h1 class="hero-title">Dive<br><em>Emergencies</em><br>Conference</h1>
+  <p class="hero-sub">Advancing the science and response of hyperbaric medicine &amp; underwater rescue</p>
+  <div class="hero-date-badge">
+    <span>📍 Cairns, Australia</span>
+    <span>September 18–20, 2026</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#register" class="btn-primary">Register Now</a>
+    <a href="#agenda" class="btn-outline">View Schedule</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section id="agenda">
+  <div class="section-label">Programme</div>
+  <h2 class="section-title">Conference Schedule</h2>
+  <div class="section-divider"></div>
+  <div class="agenda-grid">
+    <!-- Day 1 -->
+    <div class="agenda-day">
+      <div class="agenda-day-header">Day 1 · September 18</div>
+      <div class="agenda-item">
+        <div class="agenda-time">08:30</div>
+        <div class="agenda-talk">
+          <div>Registration &amp; Welcome Coffee</div>
+          <div class="agenda-speaker">Lobby, Main Hall</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">09:30</div>
+        <div class="agenda-talk">
+          <div>Opening Keynote: Decompression Illness — Mechanisms &amp; New Frontiers</div>
+          <div class="agenda-speaker">Dr. Sarah Okafor, DAN International</div>
+          <span class="tag tag-red">Keynote</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">11:00</div>
+        <div class="agenda-talk">
+          <div>On-Site Emergency Response Protocols</div>
+          <div class="agenda-speaker">Lt. Cmdr. James Ito, RAN</div>
+          <span class="tag tag-cyan">Workshop</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">13:00</div>
+        <div class="agenda-talk">
+          <div>Lunch &amp; Networking</div>
+          <div class="agenda-speaker">Terrace Courtyard</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">14:30</div>
+        <div class="agenda-talk">
+          <div>Oxygen Therapy — Administration, Dosing &amp; Equipment</div>
+          <div class="agenda-speaker">Prof. Maria Santos, SEARO</div>
+          <span class="tag tag-teal">Clinical</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">16:00</div>
+        <div class="agenda-talk">
+          <div>Panel: Rebreather Incidents &amp; Case Reviews</div>
+          <div class="agenda-speaker">Moderated Session</div>
+          <span class="tag tag-cyan">Panel</span>
+        </div>
+      </div>
+    </div>
+    <!-- Day 2 -->
+    <div class="agenda-day">
+      <div class="agenda-day-header">Day 2 · September 19</div>
+      <div class="agenda-item">
+        <div class="agenda-time">09:00</div>
+        <div class="agenda-talk">
+          <div>Hyperbaric Chamber Management: Standards &amp; Safety</div>
+          <div class="agenda-speaker">Dr. Anil Desai, UHMS</div>
+          <span class="tag tag-red">Keynote</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">10:30</div>
+        <div class="agenda-talk">
+          <div>Arterial Gas Embolism — Recognition &amp; Recompression</div>
+          <div class="agenda-speaker">Dr. Erin Baxter, Duke University</div>
+          <span class="tag tag-teal">Clinical</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">12:00</div>
+        <div class="agenda-talk">
+          <div>Lunch &amp; Poster Session</div>
+          <div class="agenda-speaker">Exhibition Hall B</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">14:00</div>
+        <div class="agenda-talk">
+          <div>Hands-On: In-Water Recompression Practicum</div>
+          <div class="agenda-speaker">Marina Training Pool, Reef Hotel</div>
+          <span class="tag tag-cyan">Workshop</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">16:00</div>
+        <div class="agenda-talk">
+          <div>Paediatric &amp; Freedive Emergencies</div>
+          <div class="agenda-speaker">Dr. Yuko Tanaka, Tokyo Medical</div>
+          <span class="tag tag-teal">Clinical</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">19:00</div>
+        <div class="agenda-talk">
+          <div>Conference Gala Dinner</div>
+          <div class="agenda-speaker">Coral Ballroom, Reef Hotel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPEAKERS -->
+<section id="speakers">
+  <div class="section-label">Faculty</div>
+  <h2 class="section-title">Featured Speakers</h2>
+  <div class="section-divider"></div>
+  <div class="speakers-grid">
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#0a2040,#0d3a60);">SO</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Dr. Sarah Okafor</div>
+        <div class="speaker-role">Director of Research, DAN International</div>
+        <div class="speaker-topic">→ Decompression Illness Mechanisms</div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#0d1f40,#0a3050);">JI</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Lt. Cmdr. James Ito</div>
+        <div class="speaker-role">Royal Australian Navy, Combat Diver</div>
+        <div class="speaker-topic">→ On-Site Emergency Response</div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#081830,#0a2a50);">MS</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Prof. Maria Santos</div>
+        <div class="speaker-role">WHO SEARO, Hyperbaric Medicine</div>
+        <div class="speaker-topic">→ Oxygen Therapy Protocols</div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#0a2540,#082040);">AD</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Dr. Anil Desai</div>
+        <div class="speaker-role">UHMS President, Stanford Medicine</div>
+        <div class="speaker-topic">→ Hyperbaric Chamber Safety</div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#081535,#0a2545);">EB</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Dr. Erin Baxter</div>
+        <div class="speaker-role">Duke University, Diving Medicine</div>
+        <div class="speaker-topic">→ Arterial Gas Embolism</div>
+      </div>
+    </div>
+    <div class="speaker-card">
+      <div class="speaker-avatar" style="background: linear-gradient(135deg,#091a30,#0b2a40);">YT</div>
+      <div class="speaker-info">
+        <div class="speaker-name">Dr. Yuko Tanaka</div>
+        <div class="speaker-role">Tokyo Medical University</div>
+        <div class="speaker-topic">→ Paediatric Dive Emergencies</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VENUE -->
+<section id="venue">
+  <div class="section-label">Location</div>
+  <h2 class="section-title">Venue &amp; Travel</h2>
+  <div class="section-divider"></div>
+  <div class="venue-layout">
+    <div>
+      <div class="venue-map">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 340">
+          <!-- Ocean bg -->
+          <rect width="360" height="340" fill="#071828"/>
+          <!-- Grid lines -->
+          <g stroke="rgba(0,212,255,0.06)" stroke-width="1">
+            <line x1="0" y1="85" x2="360" y2="85"/>
+            <line x1="0" y1="170" x2="360" y2="170"/>
+            <line x1="0" y1="255" x2="360" y2="255"/>
+            <line x1="90" y1="0" x2="90" y2="340"/>
+            <line x1="180" y1="0" x2="180" y2="340"/>
+            <line x1="270" y1="0" x2="270" y2="340"/>
+          </g>
+          <!-- Coastline shape -->
+          <path d="M 60 80 Q 100 60 140 90 Q 170 110 200 90 Q 230 70 260 100 Q 290 130 300 160 Q 310 200 280 230 Q 250 260 220 250 Q 190 240 160 260 Q 130 280 100 260 Q 70 240 50 210 Q 30 180 40 150 Q 50 120 60 80 Z" fill="rgba(0,168,157,0.08)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+          <!-- Reef Hotel Marker -->
+          <circle cx="185" cy="162" r="8" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
+          <circle cx="185" cy="162" r="3" fill="#00d4ff"/>
+          <circle cx="185" cy="162" r="12" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1">
+            <animate attributeName="r" values="8;20;8" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <text x="200" y="158" fill="#00d4ff" font-size="9" font-family="DM Sans, sans-serif" opacity="0.9">Reef Hotel</text>
+          <text x="200" y="170" fill="rgba(0,212,255,0.5)" font-size="7.5" font-family="DM Sans, sans-serif">Conference Venue</text>
+          <!-- Airport marker -->
+          <circle cx="270" cy="240" r="5" fill="rgba(0,168,157,0.3)" stroke="#00a89d" stroke-width="1.5"/>
+          <circle cx="270" cy="240" r="2" fill="#00a89d"/>
+          <text x="280" y="236" fill="#00a89d" font-size="8" font-family="DM Sans, sans-serif" opacity="0.8">CNS Airport</text>
+          <text x="280" y="246" fill="rgba(0,168,157,0.5)" font-size="7" font-family="DM Sans, sans-serif">~12 min</text>
+          <!-- Route line -->
+          <path d="M 185 162 Q 228 200 265 235" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="4 3" fill="none"/>
+          <!-- Scale bar -->
+          <line x1="40" y1="310" x2="100" y2="310" stroke="rgba(0,212,255,0.3)" stroke-width="1"/>
+          <text x="40" y="325" fill="rgba(0,212,255,0.4)" font-size="7" font-family="DM Sans, sans-serif">0    2 km</text>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <div class="info-block">
+        <div class="info-label">Venue</div>
+        <div class="info-value">Reef Hotel &amp; Convention Centre<br/>41–47 Wharf Street, Cairns City QLD 4870</div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">Conference Dates</div>
+        <div class="info-value">18–20 September 2026<br/><span style="color:var(--muted);font-size:0.82rem">Pre-conference workshops: September 17</span></div>
+      </div>
+      <div class="travel-cards">
+        <div class="travel-card">
+          <div class="travel-card-icon">✈️</div>
+          <div class="travel-card-title">By Air</div>
+          <div class="travel-card-text">Cairns Airport (CNS) is 12 minutes from the venue. Direct flights from Sydney, Melbourne, Brisbane &amp; Singapore.</div>
+        </div>
+        <div class="travel-card">
+          <div class="travel-card-icon">🏨</div>
+          <div class="travel-card-title">Accommodation</div>
+          <div class="travel-card-text">Block-booked rates at Reef Hotel from AUD 189/night. Use code <strong style="color:var(--cyan)">DEC2026</strong> when booking.</div>
+        </div>
+        <div class="travel-card">
+          <div class="travel-card-icon">🚌</div>
+          <div class="travel-card-title">Shuttle</div>
+          <div class="travel-card-text">Complimentary shuttle between airport and venue on Sep 17–18 and Sep 20–21.</div>
+        </div>
+        <div class="travel-card">
+          <div class="travel-card-icon">🐠</div>
+          <div class="travel-card-title">Great Barrier Reef</div>
+          <div class="travel-card-text">Optional dive excursion on Sep 21 to the Outer Reef — sign up during registration.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="section-label">Attend</div>
+  <h2 class="section-title">Registration</h2>
+  <div class="section-divider"></div>
+  <div class="register-layout">
+    <div class="register-copy">
+      <p>Join leading professionals in diving medicine, hyperbaric therapy, and emergency response for three intensive days of research, workshops, and hands-on training.</p>
+      <div class="pricing-cards">
+        <div class="pricing-card featured">
+          <div>
+            <div class="pricing-type">Early Bird</div>
+            <div class="pricing-includes">All sessions · Gala dinner · Workshop access</div>
+          </div>
+          <div class="pricing-amount">AUD 890</div>
+        </div>
+        <div class="pricing-card">
+          <div>
+            <div class="pricing-type">Standard</div>
+            <div class="pricing-includes">All sessions · Gala dinner</div>
+          </div>
+          <div class="pricing-amount">AUD 1,190</div>
+        </div>
+        <div class="pricing-card">
+          <div>
+            <div class="pricing-type">Student / Trainee</div>
+            <div class="pricing-includes">All sessions · Valid ID required</div>
+          </div>
+          <div class="pricing-amount">AUD 450</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="reg-form" id="regForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" placeholder="Jane" id="firstName"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Doe" id="lastName"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="you@example.com" id="email"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organisation / Institution</label>
+          <input class="form-input" type="text" placeholder="Hospital, University, Dive Centre…" id="org"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Registration Type</label>
+          <select class="form-select" id="regType">
+            <option value="">Select…</option>
+            <option>Early Bird — AUD 890</option>
+            <option>Standard — AUD 1,190</option>
+            <option>Student / Trainee — AUD 450</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dietary Requirements (optional)</label>
+          <input class="form-input" type="text" placeholder="Vegetarian, Gluten-free…" id="dietary"/>
+        </div>
+        <button class="form-submit" onclick="submitReg()">Submit Registration →</button>
+      </div>
+      <div class="form-success" id="regSuccess">
+        <div class="success-icon">🌊</div>
+        <h3>You're registered!</h3>
+        <p>A confirmation email is on its way. We look forward to seeing you in Cairns in September.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Dive Emergencies Conference 2026</div>
+  <div class="footer-copy">Cairns, Australia · September 18–20 · contact@dec2026.org</div>
+</footer>
+
+<!-- AI CHATBOT -->
+<button id="chat-toggle" onclick="toggleChat()">
+  <div class="pulse-ring"></div>
+  🤿
+</button>
+
+<div id="chatbox">
+  <div class="chat-header">
+    <div class="chat-avatar">🌊</div>
+    <div class="chat-header-info">
+      <div class="chat-name">Marina — DEC Assistant</div>
+      <div class="chat-status"><div class="status-dot"></div> Online</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-bubble bubble-bot">
+      Hi! I'm <strong>Marina</strong>, your DEC 2026 AI assistant 🤿<br/><br/>Ask me anything about the conference — schedule, speakers, venue, registration, or dive emergencies!
+    </div>
+  </div>
+  <div class="quick-chips" id="quickChips">
+    <div class="chip" onclick="sendChip(this)">Schedule overview</div>
+    <div class="chip" onclick="sendChip(this)">How do I register?</div>
+    <div class="chip" onclick="sendChip(this)">Getting to Cairns</div>
+    <div class="chip" onclick="sendChip(this)">Who are the speakers?</div>
+  </div>
+  <div class="typing-indicator" id="typingIndicator">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="Ask about the conference…" onkeydown="if(event.key==='Enter')sendMessage()"/>
+    <button class="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+// ── OCEAN CANVAS ──
+const canvas = document.getElementById('ocean-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], t = 0;
+
+function resizeCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function initParticles() {
+  particles = Array.from({length: 80}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.5 + 0.3,
+    dx: (Math.random() - 0.5) * 0.2,
+    dy: -Math.random() * 0.3 - 0.1,
+    o: Math.random() * 0.6 + 0.2,
+    wave: Math.random() * Math.PI * 2
+  }));
+}
+
+function drawFrame() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.008;
+
+  // Subtle wave overlay at bottom
+  ctx.save();
+  for (let i = 0; i < 3; i++) {
+    ctx.beginPath();
+    const y = H * 0.6 + i * 80;
+    ctx.moveTo(0, y);
+    for (let x = 0; x <= W; x += 5) {
+      ctx.lineTo(x, y + Math.sin(x * 0.01 + t + i) * 18);
+    }
+    ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+    ctx.fillStyle = `rgba(0,32,64,${0.06 - i * 0.01})`;
+    ctx.fill();
+  }
+  ctx.restore();
+
+  particles.forEach(p => {
+    p.x += p.dx + Math.sin(t + p.wave) * 0.15;
+    p.y += p.dy;
+    if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0,212,255,${p.o * (0.6 + 0.4 * Math.sin(t * 2 + p.wave))})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawFrame);
+}
+
+resizeCanvas(); initParticles(); drawFrame();
+window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+// ── REGISTRATION FORM ──
+function submitReg() {
+  const first = document.getElementById('firstName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const type = document.getElementById('regType').value;
+  if (!first || !email || !type) {
+    alert('Please fill in your name, email, and registration type.');
+    return;
+  }
+  document.getElementById('regForm').style.display = 'none';
+  document.getElementById('regSuccess').style.display = 'block';
+}
+
+// ── CHATBOT ──
+let chatOpen = false;
+const CONFERENCE_CONTEXT = `You are Marina, the friendly and knowledgeable AI assistant for the Dive Emergencies Conference (DEC) 2026. Answer questions helpfully and concisely.
+
+KEY FACTS:
+- Conference: Dive Emergencies Conference 2026
+- Dates: September 18–20, 2026 (pre-conference workshops September 17)
+- Venue: Reef Hotel & Convention Centre, 41–47 Wharf Street, Cairns QLD 4870, Australia
+- Airport: Cairns Airport (CNS), ~12 minutes from venue
+- Accommodation: Block-booked rates at Reef Hotel from AUD 189/night, code DEC2026
+
+REGISTRATION FEES:
+- Early Bird: AUD 890 (all sessions, gala dinner, workshop access)
+- Standard: AUD 1,190 (all sessions, gala dinner)
+- Student/Trainee: AUD 450 (valid ID required)
+
+SPEAKERS:
+- Dr. Sarah Okafor (DAN International) — Decompression Illness Mechanisms (Keynote)
+- Lt. Cmdr. James Ito (Royal Australian Navy) — On-Site Emergency Response
+- Prof. Maria Santos (WHO SEARO) — Oxygen Therapy Protocols
+- Dr. Anil Desai (UHMS / Stanford Medicine) — Hyperbaric Chamber Safety (Keynote)
+- Dr. Erin Baxter (Duke University) — Arterial Gas Embolism
+- Dr. Yuko Tanaka (Tokyo Medical University) — Paediatric Dive Emergencies
+
+DAY 1 SCHEDULE (Sep 18):
+08:30 Registration & Coffee | 09:30 Keynote: Decompression Illness | 11:00 Workshop: On-Site Emergency Response | 13:00 Lunch & Networking | 14:30 Oxygen Therapy | 16:00 Panel: Rebreather Incidents
+
+DAY 2 SCHEDULE (Sep 19):
+09:00 Keynote: Hyperbaric Chamber Management | 10:30 Arterial Gas Embolism | 12:00 Lunch & Poster Session | 14:00 Workshop: In-Water Recompression Practicum (Marina Pool) | 16:00 Paediatric & Freedive Emergencies | 19:00 Gala Dinner (Coral Ballroom)
+
+OTHER INFO:
+- Shuttle: Complimentary airport-venue shuttle Sept 17–18 and Sept 20–21
+- Post-conference optional dive excursion to the Outer Reef on September 21 (sign up during registration)
+- Contact: contact@dec2026.org
+
+Keep responses concise (2–4 sentences max unless a full schedule is requested). Be warm, professional, and knowledgeable about dive medicine topics if asked.`;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatbox').classList.toggle('open', chatOpen);
+  if (chatOpen) document.getElementById('chatInput').focus();
+}
+
+function sendChip(el) {
+  const text = el.textContent;
+  document.getElementById('quickChips').style.display = 'none';
+  addMessage(text, 'user');
+  callClaude(text);
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  document.getElementById('quickChips').style.display = 'none';
+  addMessage(text, 'user');
+  callClaude(text);
+}
+
+function addMessage(text, role) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `chat-bubble bubble-${role === 'user' ? 'user' : 'bot'}`;
+  div.innerHTML = text.replace(/\n/g, '<br/>');
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function callClaude(userMsg) {
+  const typing = document.getElementById('typingIndicator');
+  typing.classList.add('visible');
+  document.getElementById('chatMessages').scrollTop = 99999;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: CONFERENCE_CONTEXT,
+        messages: [{ role: 'user', content: userMsg }]
+      })
+    });
+    const data = await res.json();
+    const reply = data?.content?.[0]?.text || "I'm having trouble connecting right now. Please email contact@dec2026.org for assistance.";
+    typing.classList.remove('visible');
+    addMessage(reply, 'bot');
+  } catch (e) {
+    typing.classList.remove('visible');
+    addMessage("Sorry, I couldn't connect right now. Please try again or email contact@dec2026.org.", 'bot');
+  }
+}
+</script>
+</body>
+</html>
